@@ -5,16 +5,18 @@ from knn import KNNClassifier
 
 
 def main():
-    training_dataset_path = "datas/trainingSet"
-    testing_dataset_path = "datas/testLabeled"
+    args = args_parser()
+    training_dataset_path = args.train
+    testing_dataset_path = args.test
     classifier_path = "classifiers/" + "classifier_" + training_dataset_path.replace("/", "_") + ".pkl"
 
-    if not check_if_file_exists(classifier_path):
+    if not check_if_file_exists(classifier_path) or args.no_cache:
         print("Training classifier...")
         train_and_save(training_dataset_path, classifier_path)
     else:
         print("Classifier already trained. Using existing classifier.")
 
+    print("Testing classifier...")
     test(testing_dataset_path, classifier_path)
 
 
@@ -38,6 +40,19 @@ def train_and_save(datas_path, classifier_path):
 
 def check_if_file_exists(file_path):
     return os.path.isfile(file_path)
+
+
+def args_parser():
+    import argparse
+    parser = argparse.ArgumentParser(description="KNN Classifier")
+    parser.add_argument("--train", type=str, help="Path to training dataset")
+    parser.add_argument("--test", type=str, help="Path to testing dataset")
+    parser.add_argument('--no-cache', action='store_true',
+                        help='Ignore any previously saved classifiers and train a new one')
+    if not parser.parse_args().train or not parser.parse_args().test:
+        parser.error("Please provide both training and testing dataset paths")
+        exit(1)
+    return parser.parse_args()
 
 
 if __name__ == "__main__":
