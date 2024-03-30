@@ -6,18 +6,16 @@ from knn import KNNClassifier
 
 def main():
     args = args_parser()
-    training_dataset_path = args.train
-    testing_dataset_path = args.test
-    classifier_path = "classifiers/" + "classifier_" + training_dataset_path.replace("/", "_") + ".pkl"
+    classifier_path = "classifiers/" + "classifier_" + args.train.replace("/", "_") + ".pkl"
 
     if not check_if_file_exists(classifier_path) or args.no_cache:
         print("Training classifier...")
-        train_and_save(training_dataset_path, classifier_path)
+        train_and_save(args.train, classifier_path)
     else:
         print("Classifier already trained. Using existing classifier.")
 
     print("Testing classifier...")
-    test(testing_dataset_path, classifier_path)
+    test(args.test, classifier_path)
 
 
 def test(dataset_path, classifier):
