@@ -8,14 +8,24 @@ from sklearn.model_selection import train_test_split
 
 def main():
     args = args_parser()
+    create_classifier_folders(args)
     if args.knn:
         run_knn(args)
     if args.neuronal:
         run_network(args)
 
 
+def create_classifier_folders(args):
+    if not os.path.exists("classifiers"):
+        os.makedirs("classifiers")
+    if not os.path.exists("classifiers/network"):
+        os.makedirs("classifiers/network")
+    if not os.path.exists("classifiers/knn"):
+        os.makedirs("classifiers/knn")
+
+
 def run_knn(args):
-    classifier_path = "classifiers/" + "classifier_" + args.train.replace("/", "_") + ".pkl"
+    classifier_path = "classifiers/knn/" + "classifier_" + args.train.replace("/", "_") + ".pkl"
     if not check_if_file_exists(classifier_path) or args.no_cache:
         print("Training classifier KNN...")
         train_and_save(args.train, classifier_path)
@@ -26,7 +36,7 @@ def run_knn(args):
 
 
 def run_network(args):
-    classifier_path = "classifiers/" + "classifier_network_" + args.train.replace("/", "_") + ".pkl"
+    classifier_path = "classifiers/network/" + "classifier_" + args.train.replace("/", "_") + ".pkl"
     if not check_if_file_exists(classifier_path) or args.no_cache:
         print("Training classifier Neuronal Network...")
         train_and_save_network(args.train, classifier_path)
