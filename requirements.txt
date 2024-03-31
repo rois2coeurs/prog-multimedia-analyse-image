@@ -1,7 +1,8 @@
-scikit-learn
-seaborn
-numpy
-Pillow
-keras
 tensorflow
+keras
+seaborn
+scikit-learn
+numpy
+PIL
 matplotlib
+Pillow

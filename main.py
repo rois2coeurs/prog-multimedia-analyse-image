@@ -1,16 +1,19 @@
 import os
-
+import numpy as np
 from DataManager import DataManager
 from knn import KNNClassifier
-
+from network import Network
+from sklearn.model_selection import train_test_split
 
 def main():
     args = args_parser()
     classifier_path = "classifiers/" + "classifier_" + args.train.replace("/", "_") + ".pkl"
-
+    classifier_path_network = "classifiers/" + "classifier_network_" + args.train.replace("/", "_") + ".pkl"
     if not check_if_file_exists(classifier_path) or args.no_cache:
-        print("Training classifier...")
+        print("Training classifier KNN...")
         train_and_save(args.train, classifier_path)
+        print("Training classifier Neuronal Network")
+        train_and_save_network(args.train, classifier_path)
     else:
         print("Classifier already trained. Using existing classifier.")
 
@@ -35,6 +38,25 @@ def train_and_save(datas_path, classifier_path):
     classifier.train(train_data, train_labels)
     classifier.save_self(classifier_path)
 
+def train_and_save_network(dataset_path, classifier_path):
+    classifier = Network()
+
+    train_data_dict = DataManager.get_data(dataset_path)
+    train_data, train_labels = classifier.load_and_preprocess_data(train_data_dict)
+
+    # Encode labels
+    integer_encoded_labels, onehot_encoded_labels, label_encoder = classifier.encode_labels(train_labels)
+
+    # Split data
+    train_images, test_images, train_labels, test_labels = train_test_split(
+        train_data, onehot_encoded_labels, test_size=0.2, random_state=42)
+
+    # Build and train model
+    num_classes = len(np.unique(integer_encoded_labels))
+    model = classifier.build_model(num_classes)
+    classifier.train_model(model, train_images, train_labels, test_images, test_labels)
+
+    model.save(classifier_path)
 
 def check_if_file_exists(file_path):
     return os.path.isfile(file_path)
