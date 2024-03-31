@@ -36,7 +36,7 @@ def run_knn(args):
 
 
 def run_network(args):
-    classifier_path = "classifiers/network/" + "classifier_" + args.train.replace("/", "_") + ".pkl"
+    classifier_path = "classifiers/network/" + "classifier_" + args.train.replace("/", "_") + ".keras"
     if not check_if_file_exists(classifier_path) or args.no_cache:
         print("Training classifier Neuronal Network...")
         train_and_save_network(args.train, classifier_path)

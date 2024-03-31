@@ -1,11 +1,10 @@
-import pickle
-
 import numpy as np
 from PIL import Image
 from keras.src.utils import to_categorical
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, Input
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.models import load_model
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
@@ -13,8 +12,8 @@ import seaborn as sns
 
 
 class Network(object):
-    def __init__(self):
-        self.model = Sequential()
+    def __init__(self, model=Sequential()):
+        self.model = model
 
     @staticmethod
     def load_and_preprocess_data(data_dict):
@@ -67,7 +66,7 @@ class Network(object):
         """
         Train the model with early stopping.
         """
-        model.fit(train_images, train_labels, batch_size=32, epochs=5,
+        model.fit(train_images, train_labels, batch_size=32, epochs=10,
                   validation_data=(test_images, test_labels))
 
     @staticmethod
@@ -95,7 +94,7 @@ class Network(object):
         # Make predictions on the test set
         predictions = model.predict(test_images)
         predicted_classes = np.argmax(predictions, axis=1)
-        true_classes = np.argmax(test_labels, axis=1)
+        true_classes = label_encoder.transform(test_labels)
 
         # Generate the confusion matrix
         conf_matrix = confusion_matrix(true_classes, predicted_classes)
@@ -114,10 +113,10 @@ class Network(object):
         plt.show()
 
     def save_self(self, path):
-        with open(path, "wb") as f:
-            pickle.dump(self, f)
+        self.model.save(path)
 
     @staticmethod
     def load_self(path):
-        with open(path, "rb") as f:
-            return pickle.load(f)
+        model = load_model(path)
+        network = Network(model=model)
+        return network
