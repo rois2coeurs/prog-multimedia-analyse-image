@@ -38,16 +38,25 @@ You can add the information about the new command-line arguments to the `Usage` 
 
 ### Args
 
-- `--train` : Path to the training dataset
-- `--test` : Path to the testing dataset
+- `--train <path>` : Path to the training dataset
+- `--test <path>` : Path to the testing dataset
 - `--no-cache` : Ignore any previously saved classifiers and train a new one
 - `--confusion-matrix` : Display confusion matrix after testing the classifier 
 - `--knn` : Use the knn algorithm
-- `--neuronal` : Use the neuronal algorithm
+- `--neuronal <int>` : Use the neuronal algorithm with the specified epochs
 
 ### Exemple
+#### KNN
 ```bash
 python main.py --train datas/MNIST/training --test datas/MNIST/testing --confusion-matrix --knn
+```
+#### Neuronal
+```bash
+python main.py --train datas/MNIST/training --test datas/MNIST/testing --confusion-matrix --neuronal 10
+```
+#### Both
+```bash
+python main.py --train datas/MNIST/training --test datas/MNIST/testing --confusion-matrix --neuronal 10 --knn
 ```
 
 Replace `path_to_training_dataset` and `path_to_testing_dataset` with the actual paths to your datasets.

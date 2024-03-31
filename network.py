@@ -62,11 +62,11 @@ class Network(object):
         return self.model
 
     @staticmethod
-    def train_model(model, train_images, train_labels, test_images, test_labels):
+    def train_model(model, train_images, train_labels, test_images, test_labels, epochs):
         """
         Train the model with early stopping.
         """
-        model.fit(train_images, train_labels, batch_size=32, epochs=10,
+        model.fit(train_images, train_labels, batch_size=32, epochs=epochs,
                   validation_data=(test_images, test_labels))
 
     @staticmethod

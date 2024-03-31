@@ -39,7 +39,7 @@ def run_network(args):
     classifier_path = "classifiers/network/" + "classifier_" + args.train.replace("/", "_") + ".keras"
     if not check_if_file_exists(classifier_path) or args.no_cache:
         print("Training classifier Neuronal Network...")
-        train_and_save_network(args.train, classifier_path)
+        train_and_save_network(args.train, classifier_path, args.neuronal)
     else:
         print("Classifier already trained. Using existing classifier.")
     print("Testing Neuronal classifier ...")
@@ -72,7 +72,7 @@ def train_and_save(datas_path, classifier_path):
     classifier.save_self(classifier_path)
 
 
-def train_and_save_network(dataset_path, classifier_path):
+def train_and_save_network(dataset_path, classifier_path, epochs):
     classifier = Network()
 
     train_data_dict = DataManager.get_data(dataset_path)
@@ -88,7 +88,7 @@ def train_and_save_network(dataset_path, classifier_path):
     # Build and train model
     num_classes = len(np.unique(integer_encoded_labels))
     model = classifier.build_model(num_classes)
-    classifier.train_model(model, train_images, train_labels, test_images, test_labels)
+    classifier.train_model(model, train_images, train_labels, test_images, test_labels, epochs)
     classifier.save_self(classifier_path)
     model.save(classifier_path)
 
@@ -108,8 +108,8 @@ def args_parser():
                         help='Display confusion matrix after testing the classifier')
     parser.add_argument('--knn', action='store_true',
                         help='Use KNN classifier')
-    parser.add_argument('--neuronal', action='store_true',
-                        help='Use Neuronal Network classifier')
+    parser.add_argument('--neuronal', type=int,
+                        help='Use Neuronal Network classifier with the specified epochs')
     if not parser.parse_args().train or not parser.parse_args().test:
         parser.error("Please provide both training and testing dataset paths")
         exit(1)
