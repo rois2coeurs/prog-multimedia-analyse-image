@@ -13,7 +13,7 @@ def main():
         print("Training classifier KNN...")
         train_and_save(args.train, classifier_path)
         print("Training classifier Neuronal Network")
-        train_and_save_network(args.train, classifier_path)
+        train_and_save_network(args.train, classifier_path_network)
     else:
         print("Classifier already trained. Using existing classifier.")
 
