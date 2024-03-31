@@ -1,7 +1,10 @@
 import pickle
 
+from matplotlib import pyplot as plt
+import seaborn as sns
 from sklearn import neighbors, metrics
 import numpy as np
+from sklearn.metrics import confusion_matrix
 
 
 class KNNClassifier:
@@ -28,10 +31,24 @@ class KNNClassifier:
     def train(self, train_data, train_labels):
         self.knn.fit(train_data, train_labels)
 
-    def predict(self, test_data, test_labels):
+    def predict(self, test_data, test_labels, display_confusion_matrix):
         predicted = self.knn.predict(test_data)
+        self.print_classification_report(predicted, test_labels)
+        if display_confusion_matrix:
+            self.display_confusion_matrix(test_labels, predicted)
+
+    def print_classification_report(self, predicted, test_labels):
         print("Classification report for classifier %s:\n%s\n"
               % (self.knn, metrics.classification_report(test_labels, predicted)))
+
+    @staticmethod
+    def display_confusion_matrix(test_labels, predicted):
+        cm = confusion_matrix(test_labels, predicted)
+        plt.figure(figsize=(10, 7))
+        sns.heatmap(cm, annot=True, fmt='d')
+        plt.xlabel('Predicted')
+        plt.ylabel('Truth')
+        plt.show()
 
     def save_self(self, path):
         with open(path, "wb") as f:

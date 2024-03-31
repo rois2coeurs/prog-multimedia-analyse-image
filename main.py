@@ -15,15 +15,15 @@ def main():
         print("Classifier already trained. Using existing classifier.")
 
     print("Testing classifier...")
-    test(args.test, classifier_path)
+    test(args.test, classifier_path, args.confusion_matrix)
 
 
-def test(dataset_path, classifier):
+def test(dataset_path, classifier, display_confusion_matrix):
     classifier = KNNClassifier.load_self(classifier)
 
     test_data_dict = DataManager.get_data(dataset_path)
     test_data, test_labels = KNNClassifier.prepare_data(test_data_dict)
-    classifier.predict(test_data, test_labels)
+    classifier.predict(test_data, test_labels, display_confusion_matrix)
 
 
 def train_and_save(datas_path, classifier_path):
@@ -47,6 +47,8 @@ def args_parser():
     parser.add_argument("--test", type=str, help="Path to testing dataset")
     parser.add_argument('--no-cache', action='store_true',
                         help='Ignore any previously saved classifiers and train a new one')
+    parser.add_argument('--confusion-matrix', action='store_true',
+                        help='Display confusion matrix after testing the classifier')
     if not parser.parse_args().train or not parser.parse_args().test:
         parser.error("Please provide both training and testing dataset paths")
         exit(1)

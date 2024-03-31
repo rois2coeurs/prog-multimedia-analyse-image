@@ -35,14 +35,11 @@ You can add the information about the new command-line arguments to the `Usage` 
 - `--train` : Path to the training dataset
 - `--test` : Path to the testing dataset
 - `--no-cache` : Ignore any previously saved classifiers and train a new one
+- `--confusion-matrix` : Display confusion matrix after testing the classifier 
 
 ### Exemple
 ```bash
-python main.py --train path_to_training_dataset --test path_to_testing_dataset
+python main.py --train datas/MNIST/training --test datas/MNIST/testing --confusion-matrix
 ```
 
 Replace `path_to_training_dataset` and `path_to_testing_dataset` with the actual paths to your datasets.
-
-```bash
-python main.py
-```
