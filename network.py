@@ -1,3 +1,5 @@
+import pickle
+
 import numpy as np
 from PIL import Image
 from keras.src.utils import to_categorical
@@ -65,7 +67,7 @@ class Network(object):
         """
         Train the model with early stopping.
         """
-        model.fit(train_images, train_labels, batch_size=32, epochs=20,
+        model.fit(train_images, train_labels, batch_size=32, epochs=5,
                   validation_data=(test_images, test_labels))
 
     @staticmethod
@@ -110,3 +112,12 @@ class Network(object):
         plt.xlabel('Predicted Label')
         plt.ylabel('True Label')
         plt.show()
+
+    def save_self(self, path):
+        with open(path, "wb") as f:
+            pickle.dump(self, f)
+
+    @staticmethod
+    def load_self(path):
+        with open(path, "rb") as f:
+            return pickle.load(f)

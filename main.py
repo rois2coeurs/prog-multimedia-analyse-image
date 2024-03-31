@@ -12,13 +12,15 @@ def main():
     if not check_if_file_exists(classifier_path) or args.no_cache:
         print("Training classifier KNN...")
         train_and_save(args.train, classifier_path)
-        print("Training classifier Neuronal Network")
+        print("Training classifier Neuronal Network...")
         train_and_save_network(args.train, classifier_path_network)
     else:
         print("Classifier already trained. Using existing classifier.")
 
-    print("Testing classifier...")
+    print("Testing KNN classifier...")
     test(args.test, classifier_path, args.confusion_matrix)
+    print("Testing Neuronal classifier ...")
+    test_network(args.test, classifier_path_network)
 
 
 def test(dataset_path, classifier, display_confusion_matrix):
@@ -28,6 +30,12 @@ def test(dataset_path, classifier, display_confusion_matrix):
     test_data, test_labels = KNNClassifier.prepare_data(test_data_dict)
     classifier.predict(test_data, test_labels, display_confusion_matrix)
 
+def test_network(dataset_path, classifier):
+    classifier = Network.load_self(classifier)
+    test_data_dict = DataManager.get_data(dataset_path)
+    test_data, test_labels = classifier.load_and_preprocess_data(test_data_dict)
+    _, _, label_encoder = Network.encode_labels(test_labels)
+    Network.evaluate_model(classifier.model, label_encoder, test_labels, test_data)
 
 def train_and_save(datas_path, classifier_path):
     classifier = KNNClassifier()
@@ -55,8 +63,9 @@ def train_and_save_network(dataset_path, classifier_path):
     num_classes = len(np.unique(integer_encoded_labels))
     model = classifier.build_model(num_classes)
     classifier.train_model(model, train_images, train_labels, test_images, test_labels)
-
+    classifier.save_self(classifier_path)
     model.save(classifier_path)
+
 
 def check_if_file_exists(file_path):
     return os.path.isfile(file_path)
