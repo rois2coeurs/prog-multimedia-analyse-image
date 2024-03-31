@@ -10,15 +10,21 @@ The project consists of the following main components:
 
 - `knn.py`: This file contains the `KNNClassifier` class which is responsible for training the KNN classifier, making predictions, and saving/loading the trained model.
 
+- `network.py`: This file contains the neuronal network which is responsible for training the Network, making predictions, and saving/loading the trained model.
+
 - `main.py`: This is the main entry point of the application. It checks if a trained model exists, if not, it trains a new model and saves it. Then, it uses the model to make predictions on the test data.
 
 ## Dependencies
 
 The project has the following dependencies:
 
+- tensorflow
+- keras
+- seaborn
 - scikit-learn
 - numpy
 - PIL
+- matplotlib
 
 These can be installed using pip:
 
